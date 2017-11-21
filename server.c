@@ -30,9 +30,15 @@ void getargs(int *port, int argc, char *argv[], int *threads, int *buffers)
 	   fprintf(stderr, "Usage: %s <port> <threads> <buffers>\n", argv[0]);
 	   exit(1);
     }
+   
     *port = atoi(argv[1]);
     *threads = atoi(argv[2]);
     *buffers = atoi(argv[3]);
+
+    if (*threads < 0 || *buffers < 0) {
+       fprintf(stderr, "Usage: %s <port> <threads> <buffers>\n", argv[0]);
+       exit(1);
+    }
 }
 
 
@@ -46,7 +52,6 @@ void *worker() {
         count--;
         pthread_cond_signal(&empty);
         pthread_mutex_unlock(mutex);
-        printf("After unlock and before handler\n");
         requestHandle(connfd);
         Close(connfd);
     }
@@ -93,40 +98,6 @@ int main(int argc, char *argv[])
         
         pthread_cond_signal(&fill);
         pthread_mutex_unlock(mutex);
-        // for (int i = 0; i < threads; i++) {
-        //     pthread_join(workers[i], NULL);
-        // }
-    }
-	// 
-	// CS537: In general, don't handle the request in the main thread.
-	// Save the relevant info in a buffer and have one of the worker threads 
-	// do the work. 
-	// 
-
-    // handle request after the lock
- //   while (1) {
-        // pthread_mutex_lock(mutex);
-        // while (count == 0) 
-        //     pthread_cond_wait(&fill, mutex);
-        // int connfd = buffer[use_ptr];
-        // use_ptr = (use_ptr + 1) % buffers;
-        // count--;
-        // pthread_cond_signal(&empty);
-        // pthread_mutex_unlock(mutex);
-        // requestHandle(connfd);
-        // Close(connfd);
-//    }
-    // while (1) {
-    //     clientlen = sizeof(clientaddr);
-    //     connfd = Accept(listenfd, (SA *)&clientaddr, (socklen_t *) &clientlen);
-    //     requestHandle(connfd);
-    //     Close(connfd);
-    // }
-
-	
-
-
- //   }
 
 }
 

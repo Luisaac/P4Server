@@ -1,0 +1,2 @@
+
+Part A: Use producer/consumer model from the book to make a scalable server. Worker thread is doing producer work, and main thread is working on consumer work. Use first in first out circular queue to impelement buffer.
